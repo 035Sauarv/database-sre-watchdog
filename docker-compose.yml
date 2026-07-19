@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sre_target_db
+    environment:
+      POSTGRES_DB: sredb
+      POSTGRES_USER: sreadmin
+      POSTGRES_PASSWORD: srepassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sreadmin -d sredb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sre_guardrail_cache
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: sre_watchdog_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=sredb
+      - DB_USER=sreadmin
+      - DB_PASSWORD=srepassword
+      - REDIS_HOST=redis
+    # Temporarily removed volumes line to prevent blank workspace overwrites
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: sre_watchdog_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/workspace
+      - /workspace/node_modules
+    depends_on:
+      - backend
+
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: sre_prometheus_server
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      # - ./prometheus:/etc/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - backend
+
+  grafana:
+    image: grafana/grafana-oss:10.2.0
+    container_name: sre_grafana_dashboard
+    ports:
+      - "3001:3000"  # We map host port 3001 to container port 3000 so it doesn't fight React
+    depends_on:
+      - prometheus
+volumes:
+  pgdata:

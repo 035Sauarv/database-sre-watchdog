@@ -1,0 +1,23 @@
+# Node dependencies (UI packages)
+node_modules/
+.npm/
+dist/
+build/
+
+# Python virtual environments & cache
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Local secret environment files
+.env
+.env.local
+*.pem
+*.secret
+
+# IDE settings
+.vscode/
+.idea/
+.DS_Store
