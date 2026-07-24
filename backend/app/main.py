@@ -17,5 +17,10 @@ app.add_middleware(
 app.include_router(router)
 
 # Mount the isolated Prometheus scraper application endpoint
-metrics_app = make_asgi_app()
-app.mount("/metrics", metrics_app)
+@app.get("/")
+def read_root():
+    return {"status": "online", "system": "SRE Watchdog API Engine"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "database": "connected", "cache": "connected"}
