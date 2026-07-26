@@ -40,7 +40,6 @@ services:
       - DB_USER=sreadmin
       - DB_PASSWORD=srepassword
       - REDIS_HOST=redis
-    # Temporarily removed volumes line to prevent blank workspace overwrites
     depends_on:
       postgres:
         condition: service_healthy
@@ -63,7 +62,6 @@ services:
     container_name: sre_prometheus_server
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      # - ./prometheus:/etc/prometheus
     ports:
       - "9090:9090"
     depends_on:
@@ -73,8 +71,9 @@ services:
     image: grafana/grafana-oss:10.2.0
     container_name: sre_grafana_dashboard
     ports:
-      - "3001:3000"  # We map host port 3001 to container port 3000 so it doesn't fight React
+      - "3001:3000"
     depends_on:
       - prometheus
+
 volumes:
   pgdata:
