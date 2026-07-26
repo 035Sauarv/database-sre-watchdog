@@ -1,4 +1,3 @@
-@'
 version: 0.2
 
 phases:
@@ -15,7 +14,7 @@ phases:
   pre_build:
     commands:
       - echo "Executing validation checks..."
-      - cd backend && PYTHONPATH=. pytest && cd ..
+      - cd backend && PYTHONPATH=. python -m pytest && cd ..
 
   build:
     commands:
@@ -28,4 +27,3 @@ artifacts:
     - 'frontend/dist/**/*'
     - 'appspec.yml'
     - 'scripts/**/*'
-'@ | Out-File -Encoding utf8 buildspec.yml
