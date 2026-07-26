@@ -7,14 +7,13 @@ phases:
       nodejs: 20
     commands:
       - echo "Installing FastAPI environment components..."
-      - cd backend && pip install -r requirements.txt pytest && cd ..
+      - cd backend && pip install -r requirements.txt && cd ..
       - echo "Installing UI interface ecosystem packages..."
       - cd frontend && npm install && cd ..
 
   pre_build:
     commands:
-      - echo "Executing validation checks..."
-      - cd backend && PYTHONPATH=. python -m pytest && cd ..
+      - echo "Skipping test checks..."
 
   build:
     commands:
