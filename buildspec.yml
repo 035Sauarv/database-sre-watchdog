@@ -6,10 +6,15 @@ phases:
       python: 3.11
       nodejs: 20
     commands:
-      - echo "Installing FastAPI environment components..."
-      - cd backend && pip install -r requirements.txt && cd ..
-      - echo "Installing UI interface ecosystem packages..."
-      - cd frontend && npm install && cd ..
+      - echo "Installing backend dependencies..."
+      - cd backend
+      - pip install -r requirements.txt
+      - cd ..
+
+      - echo "Installing frontend dependencies..."
+      - cd frontend
+      - npm install
+      - cd ..
 
   pre_build:
     commands:
@@ -17,8 +22,10 @@ phases:
 
   build:
     commands:
-      - echo "Compiling frontend assets into production distributions..."
-      - cd frontend && SKIP_PREFLIGHT_CHECK=true BROWSERSLIST_IGNORE_OLD_DATA=true CI=false npm run build && cd ..
+      - echo "Building React application..."
+      - cd frontend
+      - npm run build
+      - cd ..
 
 artifacts:
   files:
