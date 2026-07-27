@@ -18,7 +18,7 @@ phases:
   build:
     commands:
       - echo "Compiling frontend assets into production distributions..."
-      - cd frontend && CI=false DISABLE_ESLINT_PLUGIN=true npm run build && cd ..
+      - cd frontend && SKIP_PREFLIGHT_CHECK=true BROWSERSLIST_IGNORE_OLD_DATA=true CI=false npm run build && cd ..
 
 artifacts:
   files:
