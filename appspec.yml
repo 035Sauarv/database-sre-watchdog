@@ -3,7 +3,7 @@ os: linux
 files:
   - source: /backend
     destination: /home/ubuntu/sre-watchdog/backend
-  - source: /frontend/dist
+  - source: /frontend/build
     destination: /var/www/html/sre-watchdog
 hooks:
   ApplicationStart:
