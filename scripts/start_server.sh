@@ -23,8 +23,8 @@ PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 pip install -r requirements.txt
 echo "Stopping any existing service on port 8000..."
 fuser -k 8000/tcp || true
 
-# Start Uvicorn backend server in background
+# Start Uvicorn pointing to app/main.py
 echo "Starting Uvicorn application server..."
-nohup uvicorn main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &
+nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &
 
 echo "Server started successfully."
